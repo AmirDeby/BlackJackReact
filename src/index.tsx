@@ -19,6 +19,16 @@ const store = createStore(reducer, composeWithDevTools(
     // other store enhancers if any
 ));
 
+const state = store.getState();
+// console.log(state.cards);
+const cards = state.stack[0];
+console.log(cards);
+
+store.dispatch({
+    type: 'HIT',
+    payload: { cards }
+});
+
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
