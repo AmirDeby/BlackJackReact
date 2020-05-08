@@ -1,5 +1,6 @@
-import { ICard } from "./cardModel";
 import shuffle from "lodash.shuffle";
+import { ICard } from "./cardModel";
+import sumBy from 'lodash.sumby';
 
 const cards = [
     { number: 11, image: "/cards/1.png" },
@@ -19,8 +20,9 @@ const cards = [
 
 export interface IState {
     stack: ICard[],
-    player: [],
+    player: { cards: ICard[] },
     dealer: [],
+    playerSum: number,
 }
 
 export interface IAction {
@@ -29,13 +31,42 @@ export interface IAction {
 }
 
 const initialState: IState = {
-    player: [],
+    player: { cards: [] },
     dealer: [],
-    stack:shuffle(cards),
+    stack: shuffle(cards),
+    playerSum: 0,
 };
 
 export const reducer = (state = initialState, action: IAction) => {
     switch (action.type) {
+
+        case 'HIT': {
+            const cards = action.payload;
+            const { player } = state;
+            player.cards.push(cards[0])
+            player.cards.push(cards[3])
+            return {
+                ...state,
+                player: player,
+            }
+        }
+        case 'ANOTHER_HIT': {
+            const { player } = state;
+            const cards = action.payload;
+            player.cards.push(cards[1]);
+            return {
+                ...state,
+                player: player
+            }
+        }
+        case 'PLAYER_SUM': {
+            const playerCards = action.payload;
+            const sum = sumBy(playerCards, "number")
+            return {
+                ...state,
+                playerSum: sum
+            }
+        }
         default: {
             return state;
         }

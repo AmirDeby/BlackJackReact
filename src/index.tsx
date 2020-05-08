@@ -20,14 +20,20 @@ const store = createStore(reducer, composeWithDevTools(
 ));
 
 const state = store.getState();
-// console.log(state.cards);
-const cards = state.stack[0];
-console.log(cards);
+const cards = state.stack
 
 store.dispatch({
     type: 'HIT',
-    payload: { cards }
+    payload: cards
 });
+store.dispatch({
+    type: 'ANOTHER_HIT',
+    payload: cards
+});
+store.dispatch({
+    type: 'PLAYER_SUM',
+    payload: state.player.cards
+})
 
 ReactDOM.render(
     <BrowserRouter>
