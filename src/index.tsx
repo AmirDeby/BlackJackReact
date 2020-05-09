@@ -23,17 +23,32 @@ const state = store.getState();
 const cards = state.stack
 
 store.dispatch({
-    type: 'HIT',
+    type: 'DEAL',
     payload: cards
 });
 store.dispatch({
-    type: 'ANOTHER_HIT',
+    type: 'HIT',
     payload: cards
 });
 store.dispatch({
     type: 'PLAYER_SUM',
     payload: state.player.cards
+});
+
+store.dispatch({
+    type: 'DEAL_DEALER',
+    payload: cards
+});
+store.dispatch({
+    type: 'DEALER_SUM',
+    payload: state.dealer.dealerCards,
 })
+setTimeout(() => {
+    store.dispatch({
+        type: 'COMPARE',
+        payload: state.playerSum
+    });
+}, 1500);
 
 ReactDOM.render(
     <BrowserRouter>
