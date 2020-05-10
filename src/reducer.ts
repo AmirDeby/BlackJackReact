@@ -62,8 +62,9 @@ export const reducer = (state = initialState, action: IAction) => {
 
         case 'DEAL_DEALER': {
             const cards = action.payload;
-            const { dealer } = state;
-            dealer.dealerCards.push(cards[5]);
+            const { dealer, dealerSum } = state;
+            const randomNum = Math.floor(Math.random() * 30);
+            dealer.dealerCards.push(cards[randomNum]);
             return {
                 ...state,
                 dealer,
@@ -109,9 +110,9 @@ export const reducer = (state = initialState, action: IAction) => {
                 const { dealerSum, playerSum } = state;
                 if (playerSum > 21) return "you Lose"
                 if (dealerSum > 21) return "you win"
-                if(dealerSum > playerSum) return "you Lose"
+                if (dealerSum > playerSum) return "you Lose"
                 if (dealerSum < playerSum) return "you win"
-                if(dealerSum === playerSum) return "Draw"
+                if (dealerSum === playerSum) return "Draw"
             }
             return {
                 ...state,

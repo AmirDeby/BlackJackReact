@@ -39,16 +39,33 @@ store.dispatch({
     type: 'DEAL_DEALER',
     payload: cards
 });
+if (state.dealerSum < 17) {
+    store.dispatch({
+        type: 'DEAL_DEALER',
+        payload: cards
+    });
+}
 store.dispatch({
     type: 'DEALER_SUM',
     payload: state.dealer.dealerCards,
 })
-setTimeout(() => {
+if (state.dealerSum < 17) {
     store.dispatch({
-        type: 'COMPARE',
-        payload: state.playerSum
+        type: 'DEAL_DEALER',
+        payload: cards
     });
-}, 1500);
+}
+store.dispatch({
+    type: 'DEALER_SUM',
+    payload: state.dealer.dealerCards,
+})
+store.dispatch({
+    type: 'COMPARE',
+    payload: state.playerSum
+});
+
+
+
 
 ReactDOM.render(
     <BrowserRouter>
