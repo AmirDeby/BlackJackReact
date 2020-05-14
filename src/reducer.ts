@@ -22,14 +22,14 @@ const cards = [
     { number: 8, image: "/cards/8.png" },
     { number: 9, image: "/cards/9.png" },
     { number: 9, image: "/cards/209.png" },
-    { number: 10, image: "/cards/10.png" },
+    // { number: 10, image: "/cards/10.png" },
     { number: 10, image: "/cards/210.png" },
-    { number: 10, image: "/cards/11.png" },
+    // { number: 10, image: "/cards/11.png" },
     { number: 10, image: "/cards/211.png" },
-    { number: 10, image: "/cards/111.png" },
+    // { number: 10, image: "/cards/111.png" },
     { number: 10, image: "/cards/12.png" },
     { number: 10, image: "/cards/212.png" },
-    { number: 10, image: "/cards/112.png" },
+    // { number: 10, image: "/cards/112.png" },
     { number: 10, image: "/cards/13.png" },
     { number: 9, image: "/cards/9H.png" },
 ]
@@ -37,86 +37,110 @@ const cards = [
 export interface IState {
     stack: ICard[],
     player: { cards: ICard[] },
-    dealer: { dealerCards: ICard[] },
+    dealer: { cards: ICard[] },
     dealerSum: number,
     playerSum: number,
-    status: string,
+    status: Status,
 }
-
+//  Record<string, any> תאור של אוייבקט חופשי
 export interface IAction {
     type: string;
-    payload: any;
+    payload: Record<string, any> | any;
+}
+
+export enum Status {
+    Win = "win",
+    Lose = 'lose',
+    Tie = 'tie',
+    InProgress = 'inProgress'
 }
 
 const initialState: IState = {
     player: { cards: [] },
-    dealer: { dealerCards: [] },
+    dealer: { cards: [] },
     stack: shuffle(cards),
     dealerSum: 0,
     playerSum: 0,
-    status: "",
+    status: Status.InProgress,
 };
+const whoIsTheWinner = (playerSum: number, dealerSum: number) => {
+    if (playerSum > 21) return Status.Lose
+    if (dealerSum > 21) return Status.Win
+    if (dealerSum > playerSum) return Status.Lose
+    if (dealerSum < playerSum) return Status.Win
+    if (dealerSum === playerSum) return Status.Tie
+}
 
 export const reducer = (state = initialState, action: IAction) => {
     switch (action.type) {
 
         case 'DEAL_DEALER': {
-            const cards = action.payload;
-            const { dealer, dealerSum } = state;
-            const randomNum = Math.floor(Math.random() * 30);
-            dealer.dealerCards.push(cards[randomNum]);
+            const { dealer, stack } = state;
+            const newStack = stack.concat();
+            const dealerCard = newStack.splice(0, 1);
+            const sum = sumBy(dealerCard, "number");
+            const status = (sum === 21) ? Status.Lose : Status.InProgress;
             return {
                 ...state,
-                dealer,
+                dealer: { ...dealer, cards: dealerCard },
+                stack: newStack,
+                dealerSum: sum,
+                status
             }
         }
         case 'DEAL': {
-            const cards = action.payload;
-            const { player } = state;
-            player.cards.push(cards[0])
-            player.cards.push(cards[3])
+            const { player, stack } = state;
+            const newStack = stack.concat();
+            const playerCards = newStack.splice(0, 2);
+            const sum = sumBy(playerCards, "number");
+            const status = (sum === 21) ? Status.Win : Status.InProgress;
             return {
                 ...state,
-                player: player,
+                player: { ...player, cards: playerCards },
+                stack: newStack,
+                playerSum: sum,
+                status,
+            }
+        }
+        case 'STAND': {
+            const { dealer, stack, dealerSum, playerSum } = state;
+            let dealerNewSum = dealerSum;
+            let dealerCardsCopy = dealer.cards.concat();
+            const newStack = stack.concat();
+            while (dealerNewSum < 17) {
+                const dealerNewCard = newStack.splice(0, 1);
+                dealerCardsCopy.push(dealerNewCard[0]);
+                dealerNewSum += dealerNewCard[0].number;
+            }
+            const status = whoIsTheWinner(playerSum, dealerNewSum);
+            return {
+                ...state,
+                dealer: { ...dealer, cards: dealerCardsCopy },
+                dealerSum: dealerNewSum,
+                status
             }
         }
         case 'HIT': {
-            const { player } = state;
-            const cards = action.payload;
-            player.cards.push(cards[1]);
+            const { player, stack, playerSum } = state;
+            const newStack = stack.concat();
+            const oneMoreCard = newStack.splice(0, 1);
+            const newCard = oneMoreCard[0];
+            const sum = newCard.number + playerSum;
+            const status = sum > 21 ? Status.Lose : Status.InProgress; 
             return {
                 ...state,
-                player: player
+                player: { ...player, cards: [...player.cards, newCard] },
+                playerSum: sum,
+                status
             }
         }
-        case 'DEALER_SUM': {
-            const dealerCards = action.payload;
-            const sum = sumBy(dealerCards, "number");
+        case 'SUMMARY': {
+            const { dealerSum, playerSum } = state;
+            const status = whoIsTheWinner(playerSum, dealerSum);
+            console.log(status);
             return {
                 ...state,
-                dealerSum: sum
-            }
-        }
-        case 'PLAYER_SUM': {
-            const playerCards = action.payload;
-            const sum = sumBy(playerCards, "number")
-            return {
-                ...state,
-                playerSum: sum
-            }
-        }
-        case 'COMPARE': {
-            const whoIsTheWinner = () => {
-                const { dealerSum, playerSum } = state;
-                if (playerSum > 21) return "you Lose"
-                if (dealerSum > 21) return "you win"
-                if (dealerSum > playerSum) return "you Lose"
-                if (dealerSum < playerSum) return "you win"
-                if (dealerSum === playerSum) return "Draw"
-            }
-            return {
-                ...state,
-                status: whoIsTheWinner()
+                status,
             }
         }
         default: {
@@ -124,3 +148,23 @@ export const reducer = (state = initialState, action: IAction) => {
         }
     }
 }
+
+
+// // TODO: remove this case and check the game in a different action
+// case 'DEALER_SUM': {
+//     const dealerCards = action.payload;
+//     const sum = sumBy(dealerCards, "number");
+//     return {
+//         ...state,
+//         dealerSum: sum
+//     }
+// }
+// // TODO: remove this case and check the game in a different action
+// case 'PLAYER_SUM': {
+    //     const playerCards = action.payload;
+    //     const sum = sumBy(playerCards, "number")
+    //     return {
+        //         ...state,
+        //         playerSum: sum
+        //     }
+        // }

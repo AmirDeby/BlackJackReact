@@ -1,11 +1,20 @@
 .App {
   text-align: center;
+   /* background-image: url("https://www.casinowebsites.com/wp-content/uploads/2018/04/livecasino_bg.jpg"); */
+   /* background-image: url("https://latestcasinobonusesusa.com/wp-content/uploads/2018/05/Blackjack-Mistakes.jpg"); */
+   background-image: url("https://cdnroute.bpsgameserver.com/common/Common/Common/neutral/image/2017/03/game.netentBlackjack3Hand.backgroundimage_v3.jpg");
+   background-position: 100%;
+   background-size: 100%;
+   background-repeat: no-repeat;
+   color: honeydew;
+  font-family: "Sofia"; 
 }
-
+body{
+  background-color: green;
+}
 .App-logo {
   height: 40vmin;
 }
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

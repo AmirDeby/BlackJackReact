@@ -10,6 +10,7 @@ import { createLogger } from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const logger = createLogger({ collapsed: true });
 const middleware = [thunk, logger];
@@ -27,42 +28,56 @@ store.dispatch({
     payload: cards
 });
 store.dispatch({
-    type: 'HIT',
-    payload: cards
-});
-store.dispatch({
-    type: 'PLAYER_SUM',
-    payload: state.player.cards
-});
-
-store.dispatch({
     type: 'DEAL_DEALER',
     payload: cards
 });
-if (state.dealerSum < 17) {
-    store.dispatch({
-        type: 'DEAL_DEALER',
-        payload: cards
-    });
-}
-store.dispatch({
-    type: 'DEALER_SUM',
-    payload: state.dealer.dealerCards,
-})
-if (state.dealerSum < 17) {
-    store.dispatch({
-        type: 'DEAL_DEALER',
-        payload: cards
-    });
-}
-store.dispatch({
-    type: 'DEALER_SUM',
-    payload: state.dealer.dealerCards,
-})
-store.dispatch({
-    type: 'COMPARE',
-    payload: state.playerSum
-});
+(window as any).hit = () => store.dispatch({ type: 'HIT', payload: {} });
+(window as any).stand = () => store.dispatch({ type: 'STAND', payload: {} });
+
+// if (state.dealerSum < 17) {
+//     store.dispatch({
+//         type: 'DEALER_LOWER_THAN_17',
+//         payload: {}
+//     })
+// }
+// store.dispatch({
+//     type: 'SUMMARY',
+//     payload: {}
+// })
+// store.dispatch({
+//     type: 'HIT',
+//     payload: cards
+// });
+// store.dispatch({
+//     type: 'PLAYER_SUM',
+//     payload: state.player.cards
+// });
+
+
+// if (state.dealerSum < 17) {
+//     store.dispatch({
+//         type: 'DEAL_DEALER',
+//         payload: cards
+//     });
+// }
+// store.dispatch({
+//     type: 'DEALER_SUM',
+//     payload: state.dealer.dealerCards,
+// })
+// if (state.dealerSum < 17) {
+//     store.dispatch({
+//         type: 'DEAL_DEALER',
+//         payload: cards
+//     });
+// }
+// store.dispatch({
+//     type: 'DEALER_SUM',
+//     payload: state.dealer.dealerCards,
+// })
+// store.dispatch({
+//     type: 'COMPARE',
+//     payload: state.playerSum
+// });
 
 
 
