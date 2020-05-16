@@ -4,32 +4,41 @@ import sumBy from 'lodash.sumby';
 
 const cards = [
     { number: 11, image: "/cards/201.png" },
+    { number: 11, image: "/cards/201.png" },
+    { number: 11, image: "/cards/1.png" },
     { number: 11, image: "/cards/1.png" },
     { number: 2, image: "/cards/2.png" },
+    { number: 2, image: "/cards/102.png" },
     { number: 2, image: "/cards/102.png" },
     { number: 3, image: "/cards/3.png" },
     { number: 3, image: "/cards/103.png" },
     { number: 3, image: "/cards/303.png" },
     { number: 4, image: "/cards/4.png" },
     { number: 4, image: "/cards/204.png" },
+    { number: 4, image: "/cards/204.png" },
+    { number: 5, image: "/cards/5.png" },
     { number: 5, image: "/cards/5.png" },
     { number: 5, image: "/cards/205.png" },
-    { number: 5, image: "/cards/105.png" },
     { number: 6, image: "/cards/6.png" },
     { number: 6, image: "/cards/106.png" },
     { number: 6, image: "/cards/206.png" },
     { number: 7, image: "/cards/7.png" },
+    { number: 7, image: "/cards/7.png" },
+    { number: 7, image: "/cards/7.png" },
+    { number: 8, image: "/cards/8.png" },
+    { number: 8, image: "/cards/8.png" },
     { number: 8, image: "/cards/8.png" },
     { number: 9, image: "/cards/9.png" },
     { number: 9, image: "/cards/209.png" },
-    // { number: 10, image: "/cards/10.png" },
+    { number: 9, image: "/cards/209.png" },
+    { number: 10, image: "/cards/10.png" },
     { number: 10, image: "/cards/210.png" },
-    // { number: 10, image: "/cards/11.png" },
+    { number: 10, image: "/cards/11.png" },
     { number: 10, image: "/cards/211.png" },
-    // { number: 10, image: "/cards/111.png" },
+    { number: 10, image: "/cards/111.png" },
     { number: 10, image: "/cards/12.png" },
     { number: 10, image: "/cards/212.png" },
-    // { number: 10, image: "/cards/112.png" },
+    { number: 10, image: "/cards/112.png" },
     { number: 10, image: "/cards/13.png" },
     { number: 9, image: "/cards/9H.png" },
 ]
@@ -55,14 +64,27 @@ export enum Status {
     InProgress = 'inProgress'
 }
 
-const initialState: IState = {
-    player: { cards: [] },
-    dealer: { cards: [] },
-    stack: shuffle(cards),
-    dealerSum: 0,
-    playerSum: 0,
-    status: Status.InProgress,
+const getInitialState = (): IState => {
+    const stack = shuffle(cards);
+    
+    const dealerCards = stack.splice(0, 1);
+    const dealerSum = sumBy(dealerCards, "number");
+    
+    const playerCards = stack.splice(0, 2);
+    const playerSum = sumBy(playerCards, "number");
+    const status = (playerSum === 21) ? Status.Win : Status.InProgress;
+    
+    return {
+        player: { cards: playerCards },
+        dealer: { cards: dealerCards },
+        stack,
+        dealerSum,
+        playerSum,
+        status,
+    }
+
 };
+
 const whoIsTheWinner = (playerSum: number, dealerSum: number) => {
     if (playerSum > 21) return Status.Lose
     if (dealerSum > 21) return Status.Win
@@ -71,36 +93,11 @@ const whoIsTheWinner = (playerSum: number, dealerSum: number) => {
     if (dealerSum === playerSum) return Status.Tie
 }
 
-export const reducer = (state = initialState, action: IAction) => {
+export const reducer = (state = getInitialState(), action: IAction) => {
     switch (action.type) {
 
-        case 'DEAL_DEALER': {
-            const { dealer, stack } = state;
-            const newStack = stack.concat();
-            const dealerCard = newStack.splice(0, 1);
-            const sum = sumBy(dealerCard, "number");
-            const status = (sum === 21) ? Status.Lose : Status.InProgress;
-            return {
-                ...state,
-                dealer: { ...dealer, cards: dealerCard },
-                stack: newStack,
-                dealerSum: sum,
-                status
-            }
-        }
-        case 'DEAL': {
-            const { player, stack } = state;
-            const newStack = stack.concat();
-            const playerCards = newStack.splice(0, 2);
-            const sum = sumBy(playerCards, "number");
-            const status = (sum === 21) ? Status.Win : Status.InProgress;
-            return {
-                ...state,
-                player: { ...player, cards: playerCards },
-                stack: newStack,
-                playerSum: sum,
-                status,
-            }
+        case 'NEW_GAME': {
+            return getInitialState();
         }
         case 'STAND': {
             const { dealer, stack, dealerSum, playerSum } = state;
@@ -126,7 +123,7 @@ export const reducer = (state = initialState, action: IAction) => {
             const oneMoreCard = newStack.splice(0, 1);
             const newCard = oneMoreCard[0];
             const sum = newCard.number + playerSum;
-            const status = sum > 21 ? Status.Lose : Status.InProgress; 
+            const status = sum > 21 ? Status.Lose : Status.InProgress;
             return {
                 ...state,
                 player: { ...player, cards: [...player.cards, newCard] },
@@ -134,37 +131,8 @@ export const reducer = (state = initialState, action: IAction) => {
                 status
             }
         }
-        case 'SUMMARY': {
-            const { dealerSum, playerSum } = state;
-            const status = whoIsTheWinner(playerSum, dealerSum);
-            console.log(status);
-            return {
-                ...state,
-                status,
-            }
-        }
         default: {
             return state;
         }
     }
 }
-
-
-// // TODO: remove this case and check the game in a different action
-// case 'DEALER_SUM': {
-//     const dealerCards = action.payload;
-//     const sum = sumBy(dealerCards, "number");
-//     return {
-//         ...state,
-//         dealerSum: sum
-//     }
-// }
-// // TODO: remove this case and check the game in a different action
-// case 'PLAYER_SUM': {
-    //     const playerCards = action.payload;
-    //     const sum = sumBy(playerCards, "number")
-    //     return {
-        //         ...state,
-        //         playerSum: sum
-        //     }
-        // }

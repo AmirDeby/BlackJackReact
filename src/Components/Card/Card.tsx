@@ -1,17 +1,11 @@
 import React from 'react';
 import { ICard } from '../../cardModel';
 
-export interface ICardProps {
-    card?: ICard
-}
-
-export default class Card extends React.PureComponent<ICardProps> {
+export class Card extends React.PureComponent<ICard> {
     public render() {
-        const { card } = this.props
+        const { image } = this.props
         return (
-            <div>
-                <img src={card.image} />
-            </div>
-        );
+            <img className="playing-card" key={image}
+                style={{ width: "110px" }} alt="" src={image} />);
     }
 }

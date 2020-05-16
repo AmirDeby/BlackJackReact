@@ -20,68 +20,6 @@ const store = createStore(reducer, composeWithDevTools(
     // other store enhancers if any
 ));
 
-const state = store.getState();
-const cards = state.stack
-
-store.dispatch({
-    type: 'DEAL',
-    payload: cards
-});
-store.dispatch({
-    type: 'DEAL_DEALER',
-    payload: cards
-});
-(window as any).hit = () => store.dispatch({ type: 'HIT', payload: {} });
-(window as any).stand = () => store.dispatch({ type: 'STAND', payload: {} });
-
-// if (state.dealerSum < 17) {
-//     store.dispatch({
-//         type: 'DEALER_LOWER_THAN_17',
-//         payload: {}
-//     })
-// }
-// store.dispatch({
-//     type: 'SUMMARY',
-//     payload: {}
-// })
-// store.dispatch({
-//     type: 'HIT',
-//     payload: cards
-// });
-// store.dispatch({
-//     type: 'PLAYER_SUM',
-//     payload: state.player.cards
-// });
-
-
-// if (state.dealerSum < 17) {
-//     store.dispatch({
-//         type: 'DEAL_DEALER',
-//         payload: cards
-//     });
-// }
-// store.dispatch({
-//     type: 'DEALER_SUM',
-//     payload: state.dealer.dealerCards,
-// })
-// if (state.dealerSum < 17) {
-//     store.dispatch({
-//         type: 'DEAL_DEALER',
-//         payload: cards
-//     });
-// }
-// store.dispatch({
-//     type: 'DEALER_SUM',
-//     payload: state.dealer.dealerCards,
-// })
-// store.dispatch({
-//     type: 'COMPARE',
-//     payload: state.playerSum
-// });
-
-
-
-
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
