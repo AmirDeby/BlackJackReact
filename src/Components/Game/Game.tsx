@@ -38,7 +38,7 @@ class _Game extends React.Component<IGameProps> {
                         Stand
                         </Button>
                 </div>
-                <h2 style={{ marginBottom: "22px" }}><u>Player Cards:</u></h2>
+                <h2 style={{ marginBottom: "16px", marginTop: "26px" }}><u>Player Cards:</u></h2>
                 <div>
                     {player.cards.map((card: ICard) =>
                         <Card key={card.id} {...card} />)}

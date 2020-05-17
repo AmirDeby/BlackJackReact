@@ -78,14 +78,15 @@ export const reducer = (state = getInitialState(), action: IAction) => {
             }
         }
         case 'HIT': {
-            const { player, stack, playerSum } = state;
-            const newStack = stack.concat();
-            const oneMoreCard = newStack.splice(0, 1);
+            const { player, stack, playerSum } = state;     
+    
+            const oneMoreCard = stack.splice(0, 1);
             const newCard = oneMoreCard[0];
             const sum = newCard.number + playerSum;
             const status = sum > 21 ? Status.Lose : Status.InProgress;
             return {
                 ...state,
+                stack,
                 player: { ...player, cards: [...player.cards, newCard] },
                 playerSum: sum,
                 status
