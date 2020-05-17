@@ -9,8 +9,10 @@
   font-family: "Sofia";
 }
 
-body {
-  background-color: green;
+.icon-img{
+  width: 30px;
+  color:antiquewhite !important;
+  margin-bottom: 9.3px;
 }
 
 .App-logo {

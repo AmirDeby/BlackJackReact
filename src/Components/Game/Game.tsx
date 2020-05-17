@@ -41,27 +41,26 @@ class _Game extends React.Component<IGameProps> {
                 <h2 style={{ marginBottom: "22px" }}><u>Player Cards:</u></h2>
                 <div>
                     {player.cards.map((card: ICard) =>
-                        <Card {...card} />)}
+                        <Card key={card.id} {...card} />)}
                     <h4 style={{ margin: "17px" }}><u>Total Score :{playerSum}</u></h4>
-                    <Modal style={{ margin: "auto" }} show={status !== Status.InProgress}>
-                        <Modal.Header>
-                            <h5>{status}</h5>
+                    <Modal show={status !== Status.InProgress}>
+                        <Modal.Header >
+                            <h5 style={{ margin: "auto" }}>{status}</h5>
                         </Modal.Header>
                         <Modal.Body>
                             <Button
                                 onClick={this.newGameHandler}
-                                style={{ margin: "15px" }}
+                                style={{ marginLeft: "190px" }}
                                 size="sm" variant="danger">
                                 New Game
                             </Button>
                         </Modal.Body>
                     </Modal>
-
                 </div>
                 <div style={{ margin: "10px" }}>
-                    <h2>Dealer Cards</h2>
+                    <h2><u>Dealer Cards</u></h2>
                     {dealer.cards.map((card: ICard) =>
-                        <Card {...card} />)}
+                        <Card key={card.id} {...card} />)}
                     <h4 ><u>Total Score :{dealerSum}</u></h4>
                 </div>
             </div>
