@@ -43,7 +43,7 @@ class _Game extends React.Component<IGameProps> {
                     {player.cards.map((card: ICard) =>
                         <Card {...card} />)}
                     <h4 style={{ margin: "17px" }}><u>Total Score :{playerSum}</u></h4>
-                    <Modal show={status !== Status.InProgress}>
+                    <Modal style={{ margin: "auto" }} show={status !== Status.InProgress}>
                         <Modal.Header>
                             <h5>{status}</h5>
                         </Modal.Header>
@@ -51,8 +51,7 @@ class _Game extends React.Component<IGameProps> {
                             <Button
                                 onClick={this.newGameHandler}
                                 style={{ margin: "15px" }}
-                                size="sm" variant="danger"
-                            >
+                                size="sm" variant="danger">
                                 New Game
                             </Button>
                         </Modal.Body>
