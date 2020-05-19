@@ -6,7 +6,8 @@ import { hitAction, resetGameAction, standAction } from '../../action';
 import { ICard } from '../../cardModel';
 import { IState, Status } from '../../reducer';
 import "./Game.css";
-import { Card } from '../Card/Card'
+import { Card } from '../Card/Card';
+import axios from 'axios';
 
 export interface IGameProps {
     player: any,
@@ -20,6 +21,15 @@ export interface IGameProps {
 }
 
 class _Game extends React.Component<IGameProps> {
+    // async componentDidMount() {
+    //     const response = await axios.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
+    //     const deck = response.data.deck_id
+    //     const result = await axios.get(`https://deckofcardsapi.com/api/deck/${deck}/draw/?count=2`);
+    //     const cardOne = result.data.cards[0].images.svg
+    //     const cardTwo = result.data.cards[1]
+    //     console.log(cardOne);
+        
+    // }
     public render() {
         const { dealer, player, dealerSum, playerSum, status } = this.props;
         return (
