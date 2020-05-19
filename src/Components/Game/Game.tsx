@@ -21,15 +21,7 @@ export interface IGameProps {
 }
 
 class _Game extends React.Component<IGameProps> {
-    // async componentDidMount() {
-    //     const response = await axios.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
-    //     const deck = response.data.deck_id
-    //     const result = await axios.get(`https://deckofcardsapi.com/api/deck/${deck}/draw/?count=2`);
-    //     const cardOne = result.data.cards[0].images.svg
-    //     const cardTwo = result.data.cards[1]
-    //     console.log(cardOne);
-        
-    // }
+  
     public render() {
         const { dealer, player, dealerSum, playerSum, status } = this.props;
         return (
