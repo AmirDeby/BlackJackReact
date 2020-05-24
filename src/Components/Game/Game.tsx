@@ -19,33 +19,38 @@ export interface IGameProps {
     newGame(): void,
     status: any,
     reStartGame(): void,
+    showButton: boolean,
 }
 
 class _Game extends React.Component<IGameProps> {
     public render() {
-        const { dealer, player, dealerSum, playerSum, status } = this.props;
+        const { dealer, player, dealerSum, playerSum, status, showButton } = this.props;
         return (
             <div >
-                <div style={{padding:"5px",display:"flex"}}>
+                <div style={{ padding: "5px", display: "flex" }}>
                     <Button onClick={this.reStartGameHandler} size="lg" variant="outline-danger">ReStart Game</Button>
                 </div>
-                <div style={{ margin: "auto" }}>
-                    <Button
-                        disabled={status !== Status.InProgress}
-                        size="sm" variant="light"
-                        onClick={this.hitHandle}>
-                        HIT
+                <BetForm />
+                {showButton ?
+                    <div style={{ margin: "auto" }}>
+                        <Button
+                            disabled={status !== Status.InProgress}
+                            size="sm" variant="light"
+                            onClick={this.hitHandle}>
+                            HIT
                         </Button>
-                    <Button
-                        disabled={status !== Status.InProgress}
-                        onClick={this.standHandler}
-                        size="sm" variant="light"
-                        style={{ marginLeft: "5px" }}>
-                        Stand
+                        <Button
+                            disabled={status !== Status.InProgress}
+                            onClick={this.standHandler}
+                            size="sm" variant="light"
+                            style={{ marginLeft: "5px" }}>
+                            Stand
                         </Button>
-                    <BetForm />
-                </div>
-                <h2 style={{ marginBottom: "16px", marginTop: "26px" }}><u>Player Cards:</u></h2>
+                    </div>
+                    :
+                    null
+                }
+                <h2 style={{ marginTop: "20px" }}><u>Player Cards:</u></h2>
                 <div>
                     {player.cards.map((card: ICard) =>
                         <Card key={card.id} {...card} />)}
@@ -97,7 +102,8 @@ const mapStateToProps = (state: IState) => {
         dealer: state.dealer,
         playerSum: state.playerSum,
         dealerSum: state.dealerSum,
-        status: state.status
+        status: state.status,
+        showButton: state.show,
     }
 }
 

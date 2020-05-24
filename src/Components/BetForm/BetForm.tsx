@@ -3,13 +3,14 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
-import { sendABidAction } from '../../action';
+import { sendABidAction, showbuttonAction } from '../../action';
 import { IState } from '../../reducer';
 
 export interface IBetFormProps {
     moneyBid?(bid: number): void,
     amount?: number,
     reduxBid: number,
+    show(): void ,
 }
 
 interface IBetFormState {
@@ -49,9 +50,10 @@ class _BetForm extends React.Component<IBetFormProps> {
     }
     onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const { moneyBid } = this.props;
+        const { moneyBid,show } = this.props;
         const { bid } = this.state;
         moneyBid(bid);
+        show();
         this.setState({
             bid: 0
         })
@@ -64,7 +66,8 @@ const mapStateToProps = (state: IState) => {
     }
 }
 const mapDispatchToProps = {
-    moneyBid: sendABidAction
+    moneyBid: sendABidAction,
+    show: showbuttonAction
 }
 export const BetForm = connect(
     mapStateToProps,

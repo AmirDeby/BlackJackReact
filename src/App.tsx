@@ -12,7 +12,7 @@ class App extends React.Component<any, IAppState> {
   render() {
     return (
       <div className="App">
-        <h3 style={{ marginBottom: "18px" }}>BL<img alt="icon" className="icon-img" src="/Heart.png" />ckJACK</h3>
+        <h3 style={{ marginBottom: "18px" }}><u>BL<img alt="icon" className="icon-img" src="/Heart.png" />ckJACK</u></h3>
         <Game />
       </div>
     );

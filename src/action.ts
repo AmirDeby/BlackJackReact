@@ -12,6 +12,18 @@ export const hitAction = (): IAction => {
         payload: {},
     }
 }
+export const showbuttonAction = (): IAction => {
+    return {
+        type: 'SHOW_BUTTONS',
+        payload:{}
+    }
+}
+export const hidebuttonAction = (): IAction => {
+    return {
+        type: 'HIDE_BUTTONS',
+        payload:{}
+    }
+}
 export const standAction = (): IAction => {
     return {
         type: "STAND",

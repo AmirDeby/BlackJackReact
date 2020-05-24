@@ -13,6 +13,7 @@ export interface IState {
     status: Status,
     amount: number,
     bid: number,
+    show: boolean,
 }
 //  Record<string, any> תאור של אוייבקט חופשי
 export interface IAction {
@@ -43,6 +44,7 @@ const getInitialState = (resetAmount: boolean): IState => {
         playerSum,
         status,
         bid: 0,
+        show: false,
     }
     if (resetAmount) {
         initialState.amount = 100;
@@ -61,6 +63,18 @@ const whoIsTheWinner = (playerSum: number, dealerSum: number) => {
 export const reducer = (state = getInitialState(true), action: IAction) => {
     switch (action.type) {
 
+        case 'SHOW_BUTTONS': {
+            return {
+                ...state,
+                show: true
+            }
+        }
+        case 'HIDE_BUTTONS': {
+            return {
+                ...state,
+                show: false
+            }
+        }
         case 'PLACE_A_BID': {
             const bid = parseInt(action.payload);
             return {
