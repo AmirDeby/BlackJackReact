@@ -11,6 +11,8 @@ export interface IState {
     dealerSum: number,
     playerSum: number,
     status: Status,
+    amount: number,
+    bid: number,
 }
 //  Record<string, any> תאור של אוייבקט חופשי
 export interface IAction {
@@ -24,8 +26,7 @@ export enum Status {
     Tie = 'A Tie',
     InProgress = 'inProgress'
 }
-
-const getInitialState = (): IState => {
+const getInitialState = (resetAmount: boolean): IState => {
     const stack = shuffle(cards);
 
     const dealerCards = stack.splice(0, 1);
@@ -34,15 +35,19 @@ const getInitialState = (): IState => {
     const playerCards = stack.splice(0, 2);
     const playerSum = sumBy(playerCards, "number");
     const status = (playerSum === 21) ? Status.Win : Status.InProgress;
-
-    return {
+    const initialState: Partial<IState> = {
         player: { cards: playerCards },
         dealer: { cards: dealerCards },
         stack,
         dealerSum,
         playerSum,
         status,
+        bid: 0,
     }
+    if (resetAmount) {
+        initialState.amount = 100;
+    }
+    return initialState as IState;
 };
 
 const whoIsTheWinner = (playerSum: number, dealerSum: number) => {
@@ -53,14 +58,32 @@ const whoIsTheWinner = (playerSum: number, dealerSum: number) => {
     if (dealerSum === playerSum) return Status.Tie
 }
 
-export const reducer = (state = getInitialState(), action: IAction) => {
+export const reducer = (state = getInitialState(true), action: IAction) => {
     switch (action.type) {
 
+        case 'PLACE_A_BID': {
+            const bid = parseInt(action.payload);
+            return {
+                ...state,
+                amount: state.amount - bid,
+                bid
+            }
+        }
+        case "RESTART_GAME": {
+            return {
+                ...state,
+                ...getInitialState(true),
+            }
+        }
+
         case 'NEW_GAME': {
-            return getInitialState();
+            return {
+                ...state,
+                ...getInitialState(false),
+            }
         }
         case 'STAND': {
-            const { dealer, stack, dealerSum, playerSum } = state;
+            const { dealer, stack, dealerSum, playerSum, amount, bid } = state;
             let dealerNewSum = dealerSum;
             let dealerCardsCopy = dealer.cards.concat();
             const newStack = stack.concat();
@@ -70,16 +93,23 @@ export const reducer = (state = getInitialState(), action: IAction) => {
                 dealerNewSum += dealerNewCard[0].number;
             }
             const status = whoIsTheWinner(playerSum, dealerNewSum);
+            let newAmount = amount;
+            if (status === Status.Win) {
+                newAmount = amount + (2 * bid)
+            } else if (status === Status.Tie) {
+                newAmount = amount + bid
+            }
             return {
                 ...state,
                 dealer: { ...dealer, cards: dealerCardsCopy },
                 dealerSum: dealerNewSum,
-                status
+                status,
+                amount: newAmount
             }
         }
         case 'HIT': {
-            const { player, stack, playerSum } = state;     
-    
+            const { player, stack, playerSum } = state;
+
             const oneMoreCard = stack.splice(0, 1);
             const newCard = oneMoreCard[0];
             const sum = newCard.number + playerSum;

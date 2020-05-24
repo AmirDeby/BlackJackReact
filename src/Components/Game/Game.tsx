@@ -2,12 +2,12 @@ import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
-import { hitAction, resetGameAction, standAction } from '../../action';
+import { hitAction, newGameAction, standAction, restartGameAction } from '../../action';
 import { ICard } from '../../cardModel';
 import { IState, Status } from '../../reducer';
-import "./Game.css";
+import { BetForm } from '../BetForm/BetForm';
 import { Card } from '../Card/Card';
-import axios from 'axios';
+import "./Game.css";
 
 export interface IGameProps {
     player: any,
@@ -16,18 +16,22 @@ export interface IGameProps {
     dealerSum: number
     hit(): void,
     stand(): void,
-    resetGame(): void,
+    newGame(): void,
     status: any,
+    reStartGame(): void,
 }
 
 class _Game extends React.Component<IGameProps> {
-  
     public render() {
         const { dealer, player, dealerSum, playerSum, status } = this.props;
         return (
             <div >
+                <div style={{padding:"5px",display:"flex"}}>
+                    <Button onClick={this.reStartGameHandler} size="lg" variant="outline-danger">ReStart Game</Button>
+                </div>
                 <div style={{ margin: "auto" }}>
-                    <Button disabled={status !== Status.InProgress}
+                    <Button
+                        disabled={status !== Status.InProgress}
                         size="sm" variant="light"
                         onClick={this.hitHandle}>
                         HIT
@@ -39,6 +43,7 @@ class _Game extends React.Component<IGameProps> {
                         style={{ marginLeft: "5px" }}>
                         Stand
                         </Button>
+                    <BetForm />
                 </div>
                 <h2 style={{ marginBottom: "16px", marginTop: "26px" }}><u>Player Cards:</u></h2>
                 <div>
@@ -77,8 +82,12 @@ class _Game extends React.Component<IGameProps> {
         stand()
     }
     newGameHandler = () => {
-        const { resetGame } = this.props;
-        resetGame();
+        const { newGame } = this.props;
+        newGame();
+    }
+    reStartGameHandler = () => {
+        const { reStartGame } = this.props;
+        reStartGame()
     }
 }
 
@@ -95,7 +104,8 @@ const mapStateToProps = (state: IState) => {
 const mapDispatchToProps = {
     hit: hitAction,
     stand: standAction,
-    resetGame: resetGameAction,
+    newGame: newGameAction,
+    reStartGame: restartGameAction
 }
 
 export const Game = connect(
